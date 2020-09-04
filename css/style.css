@@ -514,8 +514,8 @@ p.deprecated span{
   }
 
   pre {
-    background-color: #ffffff;
-    color: #000000;
+    background-color: black;
+    color: white;
     padding: 10px;
     border: #808080 1px solid;
     border-radius: 6px;
