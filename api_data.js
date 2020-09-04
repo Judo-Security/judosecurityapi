@@ -519,9 +519,16 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String[]",
-            "optional": false,
-            "field": "allowed",
+            "optional": true,
+            "field": "machineNames",
             "description": "<p>machine names allowed to access secret.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": true,
+            "field": "regionName",
+            "description": "<p>region allowed to access secret.</p>"
           }
         ]
       }
@@ -578,20 +585,82 @@ define({ "api": [
     "4": "a",
     "5": "t",
     "6": "e",
-    "type": "get",
-    "url": "/organizations/:organizationId",
-    "title": "Organization Details",
+    "type": "post",
+    "url": "/organization/:organizationId/Disable",
+    "title": "Disable organization",
     "version": "0.1.0",
     "permission": [
       {
-        "name": "System"
+        "name": "Judo System Admin"
       }
     ],
-    "name": "GetAllOrganization",
+    "name": "DisableOrganization",
     "group": "Organization",
     "parameter": {
       "fields": {
         "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "organizationId",
+            "description": "<p>Organization id.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Organization id.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n{\n  \"id\": \"b9ad8087-ba86-471e-ab48-fb1ddd9d201b\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "services/src/domain/organization/commands/disable.js",
+    "groupTitle": "Organization"
+  },
+  {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "get",
+    "url": "/organizations/:organizationId",
+    "title": "Get all Organizations / Get a organization's details",
+    "version": "0.1.0",
+    "permission": [
+      {
+        "name": "Judo System Admin"
+      }
+    ],
+    "name": "GetAllOrganizations_/_Get_Organization_Details_of_organization_by_Id",
+    "group": "Organization",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "organizationId",
+            "description": "<p>Unique Organization ID</p>"
+          },
           {
             "group": "Parameter",
             "type": "String",
@@ -639,14 +708,14 @@ define({ "api": [
             "type": "Number",
             "optional": true,
             "field": "page",
-            "description": "<p>=0 Page index.</p>"
+            "description": "<p>Page index.</p>"
           },
           {
             "group": "Parameter",
             "type": "Number",
             "optional": true,
             "field": "perPage",
-            "description": "<p>=15 Number of records per page.</p>"
+            "description": "<p>Number of records per page.</p>"
           },
           {
             "group": "Parameter",
@@ -674,9 +743,9 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "Object",
+            "type": "Object[]",
             "optional": false,
-            "field": "orgaization",
+            "field": "organizations",
             "description": "<p>Organization details.</p>"
           }
         ]
@@ -731,7 +800,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "Object",
             "optional": false,
-            "field": "orgaization",
+            "field": "organization",
             "description": "<p>Organization details.</p>"
           }
         ]
@@ -922,6 +991,11 @@ define({ "api": [
     "url": "/organization/:organizationId/UpdateOrganizationDetails",
     "title": "Update organization Details",
     "version": "0.1.0",
+    "permission": [
+      {
+        "name": "Judo System Admin"
+      }
+    ],
     "name": "UpdateOrganizationDetails",
     "group": "Organization",
     "parameter": {
@@ -1114,6 +1188,255 @@ define({ "api": [
     "5": "t",
     "6": "e",
     "type": "get",
+    "url": "/organizations/?id=organizationId&page=page&perPage=perPage&sortField=sortField&sortOrder=sortOrder",
+    "title": "Organization's Secrets",
+    "version": "0.1.0",
+    "permission": [
+      {
+        "name": "Judo System Admin"
+      }
+    ],
+    "name": "GetAllOrganizationSecrets",
+    "group": "Secret",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "organizationId",
+            "description": "<p>Organization unique ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Page index.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "perPage",
+            "description": "<p>Number of records per page.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "sortField",
+            "description": "<p>Sort field.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "\"descend\"",
+              "\"ascend\""
+            ],
+            "optional": true,
+            "field": "sortOrder",
+            "description": "<p>Sort order.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "secrets",
+            "description": "<p>Organization Secrets.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n\"secrets\": [\n    {\n        \"shardIds\": [\n            \"9724d55a-5a60-42ca-ae67-37ab237066d5\",\n            \"10b1c38c-979e-4b8d-8d03-86be0b379c44\",\n            \"669b749a-222c-4a8a-b596-fc2f89a0e376\",\n            \"4588b80d-f591-4cd2-a4cd-ffb603fc56db\",\n            \"20c21a7a-14a8-4ab2-b0d6-308b5274f8d3\"\n        ],\n        \"id\": \"84ed5720-141f-472c-84e5-60e304f037b3\",\n        \"description\": \"sasa\",\n        \"createdDate\": \"2020-08-18T10:58:21.000Z\",\n        \"organizationId\": \"4d7a287e-32b7-44fd-a005-0ed9f2bf03dc\",\n        \"userId\": \"fa820b47-c11d-4625-a134-16531bc2b8e9\",\n        \"policy\": {\n            \"policyId\": \"db0a8e35-b2c2-4edd-88f4-859842f06db7\",\n            \"requiresAuthentication\": true,\n            \"expiresOn\": null,\n            \"allowedIPs\": [],\n            \"machineNames\": [],\n            \"region\": {}\n        },\n        \"fulfilled\": true,\n        \"username\": \"Mukesh Ambani\"\n    },\n    {\n        \"shardIds\": [\n            \"4bfb1299-72cd-4e9b-95de-6a12ab1c5b60\",\n            \"46189bda-c60a-4a4a-a545-9851408066a5\",\n            \"a04b2ffc-4698-4755-a4a4-e57d95d85c08\",\n            \"29b4f5d1-4fbd-488c-9702-668b500fc51f\",\n            \"5270b6d2-4993-4e62-aece-13f5dab91d12\"\n        ],\n        \"id\": \"4d946791-3671-43ab-a258-02e0098148c3\",\n        \"description\": \"Z\",\n        \"createdDate\": \"2020-08-17T05:49:02.000Z\",\n        \"organizationId\": \"4d7a287e-32b7-44fd-a005-0ed9f2bf03dc\",\n        \"userId\": \"fa820b47-c11d-4625-a134-16531bc2b8e9\",\n        \"policy\": {\n            \"policyId\": \"c722ee10-1841-4725-857b-98434eefef12\",\n            \"requiresAuthentication\": true,\n            \"expiresOn\": \"2020-08-18T09:53:41.766Z\",\n            \"allowedIPs\": [],\n            \"machineNames\": [],\n            \"region\": {}\n        },\n        \"fulfilled\": false,\n        \"username\": \"Mukesh Ambani\"\n    },",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "projections/src/projections/views/systemadmin/secrets.js",
+    "groupTitle": "Secret"
+  },
+  {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "get",
+    "url": "/systemadmin/?id=organizationId&startDate=startDate&endDate=endDate&dateStats=dateStats",
+    "title": "Secrets Created Over Time",
+    "version": "0.1.0",
+    "permission": [
+      {
+        "name": "Judo System Admin"
+      }
+    ],
+    "name": "GetAllSecretsAccessedOverTime",
+    "group": "Secret",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "id",
+            "description": "<p>Organization unique ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "startDate",
+            "description": "<p>Starting Date</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "endDate",
+            "description": "<p>Ending Date</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "\"day\"",
+              "\"month\"",
+              "\"year\""
+            ],
+            "optional": false,
+            "field": "dateStats",
+            "description": "<p>Group By parameter</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "secretsCreatedOverTime",
+            "description": "<p>Secrets Created of a organization over time</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n[\n   {\n       \"day\": \"01\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n   {\n       \"day\": \"02\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "projections/src/projections/views/systemadmin/secretsCreatedOverTime.js",
+    "groupTitle": "Secret"
+  },
+  {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "get",
+    "url": "/systemadmin/?id=organizationId&startDate=startDate&endDate=endDate&dateStats=dateStats",
+    "title": "Secrets Accessed Over Time",
+    "version": "0.1.0",
+    "permission": [
+      {
+        "name": "Judo System Admin"
+      }
+    ],
+    "name": "GetAllSecretsCreatedOverTime",
+    "group": "Secret",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "id",
+            "description": "<p>Organization unique ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "startDate",
+            "description": "<p>Starting Date</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "endDate",
+            "description": "<p>Ending Date</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "\"day\"",
+              "\"month\"",
+              "\"year\""
+            ],
+            "optional": false,
+            "field": "dateStats",
+            "description": "<p>Group By parameter</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "secretsAccessedOverTime",
+            "description": "<p>Secrets Accessed of a organization over time</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n[\n   {\n       \"day\": \"01\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n   {\n       \"day\": \"02\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "projections/src/projections/views/systemadmin/secretsAccessedOverTime.js",
+    "groupTitle": "Secret"
+  },
+  {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "get",
     "url": "/secrets?oId=:organizationId&p=:page&pp=:perPage&sf=:sortField&so=:sortOrder",
     "title": "My Secrets",
     "version": "0.1.0",
@@ -1240,7 +1563,7 @@ define({ "api": [
             "type": "Number",
             "optional": true,
             "field": "page",
-            "description": "<p>=0 Page index.</p>"
+            "description": "<p>Page index.</p>"
           },
           {
             "group": "Parameter",
@@ -1254,7 +1577,7 @@ define({ "api": [
             "type": "Number",
             "optional": true,
             "field": "perPage",
-            "description": "<p>=25 Number of records per page.</p>"
+            "description": "<p>Number of records per page.</p>"
           },
           {
             "group": "Parameter",
@@ -1542,399 +1865,6 @@ define({ "api": [
     "groupTitle": "Secret"
   },
   {
-    "0": "p",
-    "1": "r",
-    "2": "i",
-    "3": "v",
-    "4": "a",
-    "5": "t",
-    "6": "e",
-    "type": "post",
-    "url": "/secret/:secretId/UpdatePolicy",
-    "title": "Update a secret's policy",
-    "version": "0.1.1",
-    "name": "UpdateSecretPolicy",
-    "group": "Secret",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Boolean",
-            "optional": false,
-            "field": "requiresAuthentication",
-            "description": "<p>Requires authentication to read the secret back?</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "secretId",
-            "description": "<p>Secret id.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "expiresIn",
-            "description": "<p>=0 The number of seconds the secret expires in.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String[]",
-            "optional": false,
-            "field": "allowedIPs",
-            "description": "<p>IP addresses allowed to access secret.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String[]",
-            "optional": false,
-            "field": "allowed",
-            "description": "<p>machine names allowed to access secret.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>id.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"id\": \"a7017390-3327-4bdc-a0a3-8bd4d4e044ac\",\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "services/src/domain/secret/commands/updatePolicy.js",
-    "groupTitle": "Secret"
-  },
-  {
-    "0": "p",
-    "1": "r",
-    "2": "i",
-    "3": "v",
-    "4": "a",
-    "5": "t",
-    "6": "e",
-    "type": "get",
-    "url": "/organizations/?id=organizationId&page=page&perPage=perPage&sortField=sortField&sortOrder=sortOrder",
-    "title": "Organization Secrets",
-    "version": "0.1.0",
-    "permission": [
-      {
-        "name": "System"
-      }
-    ],
-    "name": "GetAllOrganizationSecrets",
-    "group": "Secrets",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "organizationId",
-            "description": "<p>Organization unique ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "page",
-            "description": "<p>=0 Page index.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "perPage",
-            "description": "<p>=15 Number of records per page.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "sortField",
-            "description": "<p>Sort field.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "\"descend\"",
-              "\"ascend\""
-            ],
-            "optional": true,
-            "field": "sortOrder",
-            "description": "<p>Sort order.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Array",
-            "optional": false,
-            "field": "secrets",
-            "description": "<p>Organization Secrets.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n\"secrets\": [\n    {\n        \"shardIds\": [\n            \"9724d55a-5a60-42ca-ae67-37ab237066d5\",\n            \"10b1c38c-979e-4b8d-8d03-86be0b379c44\",\n            \"669b749a-222c-4a8a-b596-fc2f89a0e376\",\n            \"4588b80d-f591-4cd2-a4cd-ffb603fc56db\",\n            \"20c21a7a-14a8-4ab2-b0d6-308b5274f8d3\"\n        ],\n        \"id\": \"84ed5720-141f-472c-84e5-60e304f037b3\",\n        \"description\": \"sasa\",\n        \"createdDate\": \"2020-08-18T10:58:21.000Z\",\n        \"organizationId\": \"4d7a287e-32b7-44fd-a005-0ed9f2bf03dc\",\n        \"userId\": \"fa820b47-c11d-4625-a134-16531bc2b8e9\",\n        \"policy\": {\n            \"policyId\": \"db0a8e35-b2c2-4edd-88f4-859842f06db7\",\n            \"requiresAuthentication\": true,\n            \"expiresOn\": null,\n            \"allowedIPs\": [],\n            \"machineNames\": [],\n            \"region\": {}\n        },\n        \"fulfilled\": true,\n        \"username\": \"Mukesh Ambani\"\n    },\n    {\n        \"shardIds\": [\n            \"4bfb1299-72cd-4e9b-95de-6a12ab1c5b60\",\n            \"46189bda-c60a-4a4a-a545-9851408066a5\",\n            \"a04b2ffc-4698-4755-a4a4-e57d95d85c08\",\n            \"29b4f5d1-4fbd-488c-9702-668b500fc51f\",\n            \"5270b6d2-4993-4e62-aece-13f5dab91d12\"\n        ],\n        \"id\": \"4d946791-3671-43ab-a258-02e0098148c3\",\n        \"description\": \"Z\",\n        \"createdDate\": \"2020-08-17T05:49:02.000Z\",\n        \"organizationId\": \"4d7a287e-32b7-44fd-a005-0ed9f2bf03dc\",\n        \"userId\": \"fa820b47-c11d-4625-a134-16531bc2b8e9\",\n        \"policy\": {\n            \"policyId\": \"c722ee10-1841-4725-857b-98434eefef12\",\n            \"requiresAuthentication\": true,\n            \"expiresOn\": \"2020-08-18T09:53:41.766Z\",\n            \"allowedIPs\": [],\n            \"machineNames\": [],\n            \"region\": {}\n        },\n        \"fulfilled\": false,\n        \"username\": \"Mukesh Ambani\"\n    },",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "projections/src/projections/views/systemadmin/secrets.js",
-    "groupTitle": "Secrets"
-  },
-  {
-    "0": "p",
-    "1": "r",
-    "2": "i",
-    "3": "v",
-    "4": "a",
-    "5": "t",
-    "6": "e",
-    "type": "get",
-    "url": "/systemadmin/?id=organizationId&startDate=startDate&endDate=endDate&dateStats=dateStats",
-    "title": "Users",
-    "version": "0.1.0",
-    "permission": [
-      {
-        "name": "System"
-      }
-    ],
-    "name": "GetAllOrganizationUsersCreatedOverTime",
-    "group": "Secrets",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "id",
-            "description": "<p>Organization unique ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Date",
-            "optional": false,
-            "field": "startDate",
-            "description": "<p>Starting Date</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Date",
-            "optional": false,
-            "field": "endDate",
-            "description": "<p>Ending Date</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "dateStats",
-            "description": "<p>Group By parameter</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Array",
-            "optional": false,
-            "field": "UsersOverTime",
-            "description": "<p>Organization Users creater over time.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n[\n   {\n       \"day\": \"01\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n   {\n       \"day\": \"02\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n]",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "projections/src/projections/views/systemadmin/usersOverTime.js",
-    "groupTitle": "Secrets"
-  },
-  {
-    "0": "p",
-    "1": "r",
-    "2": "i",
-    "3": "v",
-    "4": "a",
-    "5": "t",
-    "6": "e",
-    "type": "get",
-    "url": "/systemadmin/?id=organizationId&startDate=startDate&endDate=endDate&dateStats=dateStats",
-    "title": "Secrets Accessed Over Time",
-    "version": "0.1.0",
-    "permission": [
-      {
-        "name": "System"
-      }
-    ],
-    "name": "GetAllSecretsAccessedOverTime",
-    "group": "Secrets",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "id",
-            "description": "<p>Organization unique ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Date",
-            "optional": false,
-            "field": "startDate",
-            "description": "<p>Starting Date</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Date",
-            "optional": false,
-            "field": "endDate",
-            "description": "<p>Ending Date</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "dateStats",
-            "description": "<p>Group By parameter</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Array",
-            "optional": false,
-            "field": "secretsCreatedOverTime",
-            "description": "<p>Secrets Created of a organization over time</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n[\n   {\n       \"day\": \"01\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n   {\n       \"day\": \"02\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n]",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "projections/src/projections/views/systemadmin/secretsCreatedOverTime.js",
-    "groupTitle": "Secrets"
-  },
-  {
-    "0": "p",
-    "1": "r",
-    "2": "i",
-    "3": "v",
-    "4": "a",
-    "5": "t",
-    "6": "e",
-    "type": "get",
-    "url": "/systemadmin/?id=organizationId&startDate=startDate&endDate=endDate&dateStats=dateStats",
-    "title": "Secrets",
-    "version": "0.1.0",
-    "permission": [
-      {
-        "name": "System"
-      }
-    ],
-    "name": "GetAllSecretsCreatedOverTime",
-    "group": "Secrets",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "id",
-            "description": "<p>Organization unique ID</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Date",
-            "optional": false,
-            "field": "startDate",
-            "description": "<p>Starting Date</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Date",
-            "optional": false,
-            "field": "endDate",
-            "description": "<p>Ending Date</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "dateStats",
-            "description": "<p>Group By parameter</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Array",
-            "optional": false,
-            "field": "secretsAccessedOverTime",
-            "description": "<p>Secrets Accessed of a organization over time</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n[\n   {\n       \"day\": \"01\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n   {\n       \"day\": \"02\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n]",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "projections/src/projections/views/systemadmin/secretsAccessedOverTime.js",
-    "groupTitle": "Secrets"
-  },
-  {
     "type": "get",
     "url": "/shard/:shardId?s=:secretId&t=:transactionId",
     "title": "Download Shard",
@@ -2014,111 +1944,6 @@ define({ "api": [
     },
     "filename": "storage/src/routes/policy.js",
     "groupTitle": "Shard"
-  },
-  {
-    "0": "p",
-    "1": "r",
-    "2": "i",
-    "3": "v",
-    "4": "a",
-    "5": "t",
-    "6": "e",
-    "type": "post",
-    "url": "/organization/:organizationId/Disable",
-    "title": "Disable organization",
-    "version": "0.1.0",
-    "name": "DisableOrganization",
-    "group": "SystemAdmin",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "organizationId",
-            "description": "<p>Organization id.</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Organization id.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n{\n  \"id\": \"b9ad8087-ba86-471e-ab48-fb1ddd9d201b\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "services/src/domain/organization/commands/disable.js",
-    "groupTitle": "SystemAdmin"
-  },
-  {
-    "0": "p",
-    "1": "r",
-    "2": "i",
-    "3": "v",
-    "4": "a",
-    "5": "t",
-    "6": "e",
-    "type": "get",
-    "url": "/organizations/?id=organizationId",
-    "title": "Organization Nodes",
-    "version": "0.1.0",
-    "permission": [
-      {
-        "name": "SystemAdmin"
-      }
-    ],
-    "name": "GetNodesOfOrganization",
-    "group": "SystemAdmin",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "id",
-            "description": "<p>Unique Id of organization</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Array",
-            "optional": false,
-            "field": "nodes",
-            "description": "<p>Organization Nodes.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"Oregon\":\"Active\",\n  \"San Fransisco\":\"Active\",\n  \"Canada\":\"Inactive\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "projections/src/projections/views/systemadmin/nodes.js",
-    "groupTitle": "SystemAdmin"
   },
   {
     "0": "p",
@@ -2255,7 +2080,7 @@ define({ "api": [
     "version": "0.1.0",
     "permission": [
       {
-        "name": "System"
+        "name": "Judo System Admin"
       }
     ],
     "name": "GetAllOrganizationUsers",
@@ -2333,6 +2158,87 @@ define({ "api": [
       ]
     },
     "filename": "projections/src/projections/views/systemadmin/users.js",
+    "groupTitle": "Users"
+  },
+  {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "get",
+    "url": "/systemadmin/?id=organizationId&startDate=startDate&endDate=endDate&dateStats=dateStats",
+    "title": "Users Over Time",
+    "version": "0.1.0",
+    "permission": [
+      {
+        "name": "Judo System Admin"
+      }
+    ],
+    "name": "GetAllOrganizationUsersCreatedOverTime",
+    "group": "Users",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "id",
+            "description": "<p>Organization unique ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "startDate",
+            "description": "<p>Starting Date</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "endDate",
+            "description": "<p>Ending Date</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "\"day\"",
+              "\"month\"",
+              "\"year\""
+            ],
+            "optional": false,
+            "field": "dateStats",
+            "description": "<p>Group By parameter</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Array",
+            "optional": false,
+            "field": "UsersOverTime",
+            "description": "<p>Organization Users creater over time.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n[\n   {\n       \"day\": \"01\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n   {\n       \"day\": \"02\",\n       \"month\": \"08\",\n       \"year\": \"2020\",\n       \"value\": 0\n   },\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "projections/src/projections/views/systemadmin/usersOverTime.js",
     "groupTitle": "Users"
   },
   {
