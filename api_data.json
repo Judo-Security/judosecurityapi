@@ -1865,6 +1865,94 @@
     "groupTitle": "Secret"
   },
   {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "post",
+    "url": "/secret/:secretId/UpdatePolicy",
+    "title": "Update a secret's policy",
+    "version": "0.1.0",
+    "name": "UpdateSecretPolicy",
+    "group": "Secret",
+    "deprecated": {
+      "content": "[This api is not used]"
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": false,
+            "field": "requiresAuthentication",
+            "description": "<p>Requires authentication to read the secret back?</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "secretId",
+            "description": "<p>Secret id.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "expiresIn",
+            "description": "<p>=0 The number of seconds the secret expires in.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String[]",
+            "optional": true,
+            "field": "allowedIPs",
+            "description": "<p>IP addresses allowed to access secret.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String[]",
+            "optional": true,
+            "field": "machineNames",
+            "description": "<p>machine names allowed to access secret.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": true,
+            "field": "regionName",
+            "description": "<p>region allowed to access secret.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"id\": \"a7017390-3327-4bdc-a0a3-8bd4d4e044ac\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "services/src/domain/secret/commands/updatePolicy.js",
+    "groupTitle": "Secret"
+  },
+  {
     "type": "get",
     "url": "/shard/:shardId?s=:secretId&t=:transactionId",
     "title": "Download Shard",
