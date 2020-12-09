@@ -498,7 +498,7 @@
           {
             "group": "Parameter",
             "type": "Boolean",
-            "optional": false,
+            "optional": true,
             "field": "requiresAuthentication",
             "description": "<p>Requires authentication to read the secret back?</p>"
           },
@@ -515,6 +515,13 @@
             "optional": true,
             "field": "allowedIPs",
             "description": "<p>=[] IP Addresses allowed to access this secret.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String[]",
+            "optional": true,
+            "field": "deniedIPs",
+            "description": "<p>=[] IP Addresses not allowed to access this secret.</p>"
           },
           {
             "group": "Parameter",
@@ -2034,6 +2041,139 @@
     "groupTitle": "Shard"
   },
   {
+    "type": "post",
+    "url": "/userAgreement/Update",
+    "title": "Update User Agreement Policy",
+    "version": "0.1.0",
+    "name": "Update",
+    "group": "UserAgreement",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Name of policy.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "version",
+            "description": "<p>Version number of policy.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "effectiveStartDate",
+            "description": "<p>Date when the policy will be in effect.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "policySummary",
+            "description": "<p>Summary of type new updates in policy</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "signedOffDate",
+            "description": "<p>Date when the policy was approved by the board.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "enforcePolicy",
+            "description": "<p>Require the user to accept policy again or not.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>id.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"id\": \"a7017390-3327-4bdc-a0a3-8bd4d4e044ac\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "services/src/domain/userAgreement/commands/update.js",
+    "groupTitle": "UserAgreement"
+  },
+  {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "get",
+    "url": "/organizations/:organizationId",
+    "title": "Organization Details",
+    "version": "0.1.0",
+    "permission": [
+      {
+        "name": "Manager"
+      }
+    ],
+    "name": "GetUserDetailsFromHubspot",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>User Email.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "organization",
+            "description": "<p>User details.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"phone\":\n  {\n    \"value\":\"9955588844\"\n  },\n  \"firstname\":\n  {\n    \"value\":\"Name\"\n  },\n  \"comments\":\n  {\n    \"value\":\"Test\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "projections/src/projections/views/manager/userDetailsHubspot.js",
+    "groupTitle": "User"
+  },
+  {
     "0": "p",
     "1": "r",
     "2": "i",
@@ -2089,6 +2229,36 @@
       }
     },
     "filename": "services/src/domain/user/commands/acceptInvite.js",
+    "groupTitle": "Users"
+  },
+  {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "post",
+    "url": "/user/:userId/AcceptInvite",
+    "title": "Accept the user agreement policy",
+    "version": "0.1.0",
+    "name": "AcceptUserAgreement",
+    "group": "Users",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>User id.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "services/src/domain/user/commands/acceptUserAgreement.js",
     "groupTitle": "Users"
   },
   {
@@ -2411,6 +2581,55 @@
       ]
     },
     "filename": "projections/src/projections/views/manager/profile.js",
+    "groupTitle": "Users"
+  },
+  {
+    "0": "p",
+    "1": "r",
+    "2": "i",
+    "3": "v",
+    "4": "a",
+    "5": "t",
+    "6": "e",
+    "type": "get",
+    "url": "/userAcceptedPolicyVersions?userId=userId",
+    "title": "UserAcceptedPolicyVersions",
+    "version": "0.1.0",
+    "permission": [
+      {
+        "name": "Manager"
+      }
+    ],
+    "name": "GetUserAcceptedPolicyVersions",
+    "group": "Users",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "privacyPolicyVersions",
+            "description": "<p>Privacy Policy Versions</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "termsOfServiceVersions",
+            "description": "<p>Terms Of Service Versions</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n   \"privacyPolicyVersions\": [\n     \"1.2\"\n   ],\n   \"termsOfServiceVersions\": [\n     \"1.2\"\n   ]\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "projections/src/projections/views/auditlogs/userAcceptedPolicyVersions.js",
     "groupTitle": "Users"
   },
   {
